@@ -16,8 +16,8 @@ const Stack =  createStackNavigator();
 const Router = () => {
     return (
         <Stack.Navigator>
-            {/* <Stack.Screen name="Login" component={Login} options={{title: 'Login'} ,{headerLeft: null},{justifyContent: 'center'}}/>
-            <Stack.Screen name="register" component={register} options={{ title: 'Register Login' },{headerLeft: null}} />      */}
+            <Stack.Screen name="Login" component={Login} options={{title: 'Login'} ,{headerLeft: null},{justifyContent: 'center'}}/>
+            <Stack.Screen name="register" component={register} options={{ title: 'Register Login' },{headerLeft: null}} />     
             <Stack.Screen name="Home" component={Home} options={{headerLeft: null}}  />
             <Stack.Screen name="cekIn" component={cekIn}  options={{title :'Absensi Masuk'}}/>
             <Stack.Screen name="cekOut" component={cekOut}  options={{title :'Absensi Pulang'}}/>
