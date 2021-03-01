@@ -1,95 +1,183 @@
-import React, { Component } from 'react'
-import {  View,TouchableOpacity,Text } from 'react-native'
-import InputData from '../../../component/Inputdata/Index'
-import styles from '../style'
-import DatePicker from 'react-native-date-picker'
+import React, { useState, useEffect } from 'react'
 
-export default class Ijin extends Component {
-    constructor(props){
-        super(props);
-        this.state ={
-            tanggalIn:'',
-            tanggalOut:'',
-            perihal:'',
-            keterangan:'',
-            date: new Date(),
+import { Layout, Text, Input, IndexPath, Select, SelectItem, Card, Avatar, Button } from '@ui-kitten/components';
+import { RNCamera } from 'react-native-camera';
+import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import Firebase from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import { FormDatePicker } from '@99xt/first-born'
+
+const lstKategori = ["Ijin Bencana", "Ijin Sakit", "Ijin Anak Sakit"]
+
+let camera = null;
+const Ijin = () => {
+    const [kategori, setKategori] = useState(0)
+    const [dari, setDari] = useState("")
+    const [sampai, setSampai] = useState("")
+    const [perihal, setPerihal] = useState("")
+    const [keterangan, setKeterangan] = useState("")
+    const [gambar,setGambar] = useState('https://images.fandango.com/ImageRenderer/0/0/redesign/static/img/default_poster.png/0/images/masterrepository/performer%20images/p844030/ChelseaIslan.jpg')
+    
+    const renderOption = (title) => (
+
+        <SelectItem key={title} title={title} />
+    );
+      
+   
+   const saveImage = () => {
+   
+    const namefile = ""+new Date();
+   
+    const reference = storage().ref(namefile);
+
+    const pathToFile = gambar;
+    // uploads file
+    reference.putFile(pathToFile).then(() => {
+         console.log("Uploaded")
+         storage()
+         .ref(namefile)
+         .getDownloadURL().then((downloadData) =>{
+            console.log(downloadData)
+           saveData(downloadData)
+         
+         })
+    });
+   
+   }
+   
+   const saveData = (downloadData) => {
+    Firebase()
+    .collection('Users')
+    .add({
+      kategori: lstKategori[kategori.row],
+      name: nama,
+      Dari :dari,
+      Sampai : sampai,
+      Perihal: perihal,
+      Keterangan : keterangan,
+      gambar: downloadData,
+    })
+    .then(() => {
+      console.log('Pengajuan Ijin berhasil');
+    });
+   
+   }
+
+   const takePicture = async () => {
+    console.log("test")
+        if (camera) {
+          const options = { quality: 0.5, base64: true };
+          const data = await camera.takePictureAsync(options);
+          console.log(JSON.stringify(data));
+          setGambar(data.uri)
+          console.log(data.uri);
         }
-    }
-    // onSubmit = () => {
-    //     if(this.state.perihal && this.state.keterangan){
-    //         // penyimpanan di realtime database 'Firebase.database()' Firebase.Auth()=> untuk save 
-    //         // di Autenthication
-    //         const tambahUser = Firebase.database().ref('Kontak');
-    //         const Absensi ={
-    //             tanggalIn : this.state.nama,
-    //             tanggalOut : this.state.umur,
-    //             perihal: this.state.perihal,
-    //             keterangan : this.state.keterangan,
-                
-    //         }
-    //             tambahUser
-    //             .push(Absensi)
-    //             .then((data)=>{
-    //                 Alert.alert('Sukses', 'Penyimpanan Berhasil');
-    //                 //apabila sukses menyimpan maka akan kembali ke Home
-    //                 this.props.navigation.replace('Home');
-    //             })
-    //             .catch((error)=> {
-    //                 console.log("Error :", error)
-    //             })
+      };
 
-    //     } else {
-    //         Alert.alert('Error', 'Nama dan Umur Harus Diisi')
-    //     }
-       
-    // };
-    render() {
-        return (
-            <View style={styles.pages}>
+    
 
-                <DatePicker
-                    date={this.state.date} 
-                    mode="date"
-                    onDateChange={(date)=>this.setState({date:date})}
-                />
+    return (
+        <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+        <Layout style={styles.container}>
 
-                <InputData
-                    label="Dari Tanggal"
-                    placeholder="Masukkan Tanggal"
-                    // onChangeText={this.onInputChangetext}
-                    namaState="tanggalIn"
-                    value={this.state.tanggalIn}
-                />
-                <InputData
-                    label="Sampai Tanggal"
-                    placeholder="Masukkan Tanggal"
-                    // onChangeText={this.onInputChangetext}
-                    namaState="tanggalOut"
-                    value={this.state.tanggalOut}
-                />
-                <InputData
-                    label="Perihal"
-                    placeholder="Masukkan inputan"
-                    // onChangeText={this.onInputChangetext}
-                    namaState="perihal"
-                    value={this.state.perihal}
-                />
-                     <InputData
-                        label="Keterangan"
-                        placeholder="Masukkan keterangan Anda"
-                        isTextArea={true}
-                        // onChangeText={this.onInputChangetext}
-                        namaState="keterangan"
-                        value={this.state.keterangan}
-
+            <Select style={styles.layout}
+                selectedIndex={new IndexPath(kategori)}
+                placeholder='Default'
+                value={lstKategori[kategori.row]}
+                onSelect={index => setKategori(index)}>
+                {lstKategori.map(renderOption)}
+            </Select>
+                    <FormDatePicker label="Dari"
+                        placeholder="Masukkan Tanggal"
+                        onChangeText={txtdari => setDari(txtdari)}
+                        value={dari}
                     />
+                    <FormDatePicker label="Sampai"
+                        placeholder="Masukkan Tanggal"
+                        onChangeText={txtsampai => setSampai(txtsampai)}
+                        value={sampai}
+                    />
+            <Input style={styles.layout}
+                placeholder='Masukan perihal'
+                value={perihal}
+                onChangeText={txtPerihal => setPerihal(txtPerihal)} />
+            <Input style={styles.layout}
+                placeholder='Masukan Keterangan'
+                value={keterangan}
+                onChangeText={txtKeterangan => setKeterangan(txtKeterangan)} />
+            
+            <RNCamera
+                    ref={ref => {
+                        camera = ref;
+                    }}
+                    style={{flexDirection: 'row', justifyContent: 'center', height:100 , width:100 }}
+                    type={RNCamera.Constants.Type.back}
+                    flashMode={RNCamera.Constants.FlashMode.on}
+                    androidCameraPermissionOptions={{
+                        title: 'Permission to use camera',
+                        message: 'We need your permission to use your camera',
+                        buttonPositive: 'Ok',
+                        buttonNegative: 'Cancel',
+                    }}
+                    androidRecordAudioPermissionOptions={{
+                        title: 'Permission to use audio recording',
+                        message: 'We need your permission to use your audio',
+                        buttonPositive: 'Ok',
+                        buttonNegative: 'Cancel',
+                    }}
 
-                <TouchableOpacity style={styles.tombol} >
-                    <Text style={styles.textTombol}>SUBMIT</Text>
-                </TouchableOpacity>
-            </View>
-        )
-    }
+                />
+          
+            <Card style={styles.containerPicture}>
+                <Avatar style={styles.avatar} size='giant' source={{ uri: gambar }} />
+               
+
+                <Button onPress={() => takePicture()}>
+                    Ambil Foto
+            </Button>
+
+            </Card>
+            
+            <Card style={styles.containerPicture}>
+                <Button onPress={() => { saveImage() }}>
+                    Submit
+            </Button>
+            </Card>
+        </Layout>
+        </ScrollView>
+        </SafeAreaView>
+    )
 }
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
 
+    },
+    
+    layout: {
+        margin: 15,
+        alignItems: 'center',
+    },
+
+    containerPicture: {
+
+
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+
+    },
+    avatar: {
+        alignItems: 'center',
+        margin: 8,
+    },
+    scrollView: {
+        backgroundColor: 'pink',
+        marginHorizontal: 20,
+      },
+
+});
+
+export default Ijin
 

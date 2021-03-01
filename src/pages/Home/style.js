@@ -64,7 +64,7 @@ export default styles = StyleSheet.create({
         paddingTop: 20,
         borderWidth: 0.1,
         position: "absolute",
-        marginLeft: 195,
+        marginLeft: 185,
         marginRight: 40,
         marginTop: 160,
         shadowOffset: {
@@ -143,7 +143,7 @@ export default styles = StyleSheet.create({
         elevation: 5,
     },
     Text:{
-       margin: 10
+       margin: 6
 
    }
 

@@ -28,7 +28,7 @@ export default class cekOut extends Component {
     
     render() {
         return (
-            <View>
+            <View style={styles.pages}>
                 <Text> Cek Out berhasil : </Text>
                 <Text>{this.state.date}</Text>
             </View>
@@ -36,4 +36,10 @@ export default class cekOut extends Component {
     }
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+  pages: {
+    flex: 1,
+    padding: 30,
+  }
+})

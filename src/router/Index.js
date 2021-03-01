@@ -2,11 +2,10 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../pages/Home/Index'
 import Addusers from '../pages/Addusers/Index'
-import DetailKontak from '../pages/DetailKontak/Index';
-import editUser from '../pages/editUser/Index'
+
 import cekIn from '../pages/Absen/Cekin/cekIn';
 import cekOut from '../pages/Absen/Cekout/cekOut';
-import Ijin from '../pages/Absen/Ijin/Ijin';
+import Ijin from '../pages/Absen/Ijin/Ijin'
 import historyAbsen from '../pages/Absen/History/historyAbsen';
 import Login from '../pages/Login/Login';
 import register from '../pages/Login/register';
@@ -17,8 +16,8 @@ const Stack =  createStackNavigator();
 const Router = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Login" component={Login} options={{title: 'Login'} ,{headerLeft: null},{justifyContent: 'center'}}/>
-            <Stack.Screen name="register" component={register} options={{ title: 'Register Login' },{headerLeft: null}} />     
+            {/* <Stack.Screen name="Login" component={Login} options={{title: 'Login'} ,{headerLeft: null},{justifyContent: 'center'}}/>
+            <Stack.Screen name="register" component={register} options={{ title: 'Register Login' },{headerLeft: null}} />      */}
             <Stack.Screen name="Home" component={Home} options={{headerLeft: null}}  />
             <Stack.Screen name="cekIn" component={cekIn}  options={{title :'Absensi Masuk'}}/>
             <Stack.Screen name="cekOut" component={cekOut}  options={{title :'Absensi Pulang'}}/>
@@ -26,9 +25,7 @@ const Router = () => {
             <Stack.Screen name="historyAbsen" component={historyAbsen}  options={{title :'History Absensi'}}/>
             <Stack.Screen name="Log_Out" component={Log_Out}  options={{title :'Log Out'}}/>
             
-            <Stack.Screen name="Addusers" component={Addusers}  options={{title :'Tambah Laporan'}}/>
-            <Stack.Screen name="DetailKontak" component={DetailKontak}  options={{title :'Detail Laporan'}}/>
-            <Stack.Screen name="editUser" component={editUser} options={{title :'Edit Laporan'}} />
+            
         </Stack.Navigator>
     )
 }

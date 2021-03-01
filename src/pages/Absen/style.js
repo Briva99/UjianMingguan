@@ -4,7 +4,9 @@ export default styles = StyleSheet.create ({
     pages: {
         flex: 1,
         padding: 30,
-        
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
     },
     tombol: {
         backgroundColor: 'skyblue',
